@@ -14,14 +14,14 @@ The project video can be found here: LINK COMING SOON!
 If you like projects like these, consider subscribing to the Super Make Something YouTube page [here](https://www.youtube.com/supermakesomething?sub_confirmation=1) for more cool builds!  To support more projects you can [buy me a coffee on KoFi](https://ko-fi.com/supermakesomething).
 
 ## Introduction
-This repository contains code and required to build your own Mini Video Player.  Information found in this repository accompanies the "Open Source Mini Video Player" build video on the Super Make Something YouTube page, which can be found here: LINK COMING SOON!
+This repository contains code and additional instructions to build your own Mini Video Player.  Information found in this repository accompanies the "Open Source Mini Video Player" build video on the Super Make Something YouTube page, which can be found here: LINK COMING SOON!
 
-Please watch the accompanying project video and read through this README file before beginning assembly of your PCB. For the 'Over 9000' configuration, the potentiometer of the battery charger and boost module must be adjusted so that it has a 5V output voltage in order to not damage the ESP32.
+Please watch the accompanying project video and read through this README file in its entirety before beginning assembly of your PCB. For the 'Over 9000' configuration, the potentiometer of the battery charger and boost module must be adjusted so that it has a 5V output voltage in order to not damage the ESP32.
 
 ## Installation instructions and required libraries
 The `Code` folder contains all of the files needed to compile the project.  The folder `miniVideoVideoPlayer` contains the miniVideoPlayer.ino file, which should be opened in the Arduino IDE.  Folders in the `libraries` directory should be copied to the location of where your other Arduino libraries are installed.  For Windows users, this is typically under `Documents\Arduino\libraries`.
 
-*Note:*
+*Note:* Instructions on how to install the ESP32 library so that it can be programmed using the Arduino IDE can be found [here](https://youtube.com/shorts/HyL55EKHbtg).  At the time of this writing, the code for this project only works with the `esp32` library up to version 1.0.6.
 
 
 ## Bill of materials

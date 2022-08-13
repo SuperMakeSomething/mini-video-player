@@ -1,0 +1,3 @@
+ffmpeg -i input.mp4 -ar 44100 -ac 1 -q:a 9 output.mp3
+
+ffmpeg -i input.mp4 -vf "fps=24,scale=160:128:flags=lanczos" -q:v 9 output.mjpeg

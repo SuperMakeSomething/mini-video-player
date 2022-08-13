@@ -5,7 +5,7 @@ date: August 13, 2022
 
 license: Creative Commons - Attribution - Non-Commercial.  More information available at: http://creativecommons.org/licenses/by-nc/3.0/
 
-![Banner](https://raw.githubusercontent.com/SuperMakeSomething/mini-video-player/main/images/thumbnail.png)
+![Banner](images/thumbnail.png)
 
 Arduino code and programming instructions for the Mini Video Player featured in Super Make Something Episode 24!
 
@@ -46,6 +46,11 @@ The `Code` folder contains all of the files needed to compile the project.  The 
 - 20x20mm Acrylic Squares: https://litko.net/
 
 (All Amazon links are affiliate links.)
+
+## Other Notes
+
+<img src="images/lipoModule.png" width="90%"/>
+The wiring diagram for the battery charger and boost module can be found in the figure above.  Please use a multimeter and adjust the potentiometer on this module to ensure sure that the output voltage that is connected to the ESP32 is 5V.  Higher voltage may damage your ESP32 or other components.
 
 ## Conclusion
 Hopefully you found this project useful!  If you enjoyed this tutorial, consider subscribing to Super Make Something on YouTube [here](https://www.youtube.com/supermakesomething?sub_confirmation=1) for more cool builds!  If you _really_ liked this tutorial and want to support future projects, you can [buy me a coffee on KoFi](https://ko-fi.com/supermakesomething).

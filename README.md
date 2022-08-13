@@ -25,25 +25,31 @@ The `Code` folder contains all of the files needed to compile the project.  The 
 
 
 ## Bill of materials
-- PCBs: 
-- 3D Printed Files: https://www.thingiverse.com/thing:4650060
-- 3.5in TFT LCD Screen: https://amzn.to/3ke75tS
-- Arduino Pro Micro: https://amzn.to/35e6Vys
-- Arduino Nano: https://amzn.to/3eHZF0K
-- SD Card Breakout Board: https://amzn.to/3kb2Orj
-- 6mm Push-Buttons: https://amzn.to/2Ilm4VO
-- Rotary Encoder with Push-Button: https://amzn.to/35j7Xtf
-- Male/Female Header Kit: https://amzn.to/35ezw6T
-- Ribbon Cable: https://amzn.to/2GPOrLq
-- 4GB Micro SD Card: https://amzn.to/35eC2tS
-- M2 Screw Kit: https://amzn.to/2GKlz77
-- M3 Screw Kit: https://amzn.to/2GNitiQ
-- Hatchbox Black PLA: https://amzn.to/35fGM2h
-- Hatchbox White PLA: https://amzn.to/2InWG1n
-- Color Changing PLA: https://amzn.to/35fNuoM
-- Resistor Kit (Optional): https://amzn.to/2UcVQY2
-- Slow Flash RGB LEDs (Optional): https://amzn.to/2Uep7l2
-- 20x20mm Acrylic Squares: https://litko.net/
+The following quantities and components are needed to build this project.  You can also buy a kit version that includes everything you need here: LINK COMING SOON!
+
+- PCBs: LINK COMING SOON!
+- 1x ESP Wroom 32 Development Kit (30 pin version): https://amzn.to/3zT9VOL
+- 1x PAM8403 Audio Amplifier: https://amzn.to/3AmsVa8
+- 2x Thumbwheel Potentiometers: https://amzn.to/3dtOYCq
+- 1x PCB Headphone Socket: https://amzn.to/3QgI2at
+- 1x 2W 8 Ohm Speaker: https://amzn.to/3QlU2aT
+- 1x ST7735 LCD with SD Card Slot: https://amzn.to/3bQvFmG
+- 2x Momentary Push Buttons: https://amzn.to/3QKNdiz
+- 1x 2.2k Resistor: https://amzn.to/3w2nN8x
+- 1x SPDT 3 Terminal Slide Switch: https://amzn.to/3w6l1Pp
+- 1x 10uF Capacitor: https://amzn.to/3PgUTYU
+- 1x 16GB SD Card: https://amzn.to/3dqpxSo
+- 1x Lipo Charger + Boost Module: https://amzn.to/3JSrEuo
+- 1x 820mAh Lipo Battery: https://amzn.to/3SQjyqk
+- 3x M3 Button Head Screws: https://amzn.to/3C4wIdm
+ 
+I used the following tools during the build. If you need any of these, they can be found here:
+- Hakko FX888D Digital Soldering Station: https://amzn.to/3JRXAim
+- Digital Multimeter: https://amzn.to/3w6lWiP
+- Desoldering Wick: https://amzn.to/3C0L1zy
+- Desoldering Pump: https://amzn.to/3AkJWBt
+- Tin Lead Rosin Core Solder: https://amzn.to/3SQJj9K
+- Elegoo Neptune 3 3D Printer: https://amzn.to/3bWweeI
 
 (All Amazon links are affiliate links.)
 

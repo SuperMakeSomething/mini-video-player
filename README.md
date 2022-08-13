@@ -23,7 +23,6 @@ The `Code` folder contains all of the files needed to compile the project.  The 
 
 *Note:* Instructions on how to install the ESP32 library so that it can be programmed using the Arduino IDE can be found [here](https://youtube.com/shorts/HyL55EKHbtg).  At the time of this writing, the code for this project only works with the `esp32` library up to version 1.0.6.
 
-
 ## Bill of materials
 The following quantities and components are needed to build this project.  You can also buy a kit version that includes everything you need here: LINK COMING SOON!
 
@@ -52,6 +51,10 @@ I used the following tools during the build. If you need any of these, they can 
 - Elegoo Neptune 3 3D Printer: https://amzn.to/3bWweeI
 
 (All Amazon links are affiliate links.)
+
+## PCB Design Files
+
+The PCBs for this project were designed with Altium Designer.  You can get a free trial of Altium Designer [here](https://www.altium.com/yt/supermakesomething) and also get 25% off through this link if you decide to buy a license.  I'm still working out how best to share the design files, but in the meantime feel free to grab the PCB Gerber files from PCBWay here: LINK COMING SOON!
 
 ## Other Notes
 

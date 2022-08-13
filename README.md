@@ -26,7 +26,7 @@ The `Code` folder contains all of the files needed to compile the project.  The 
 ## Bill of materials
 The following quantities and components are needed to build this project.  You can also buy a kit version that includes everything you need here: LINK COMING SOON!
 
-- PCBs: LINK COMING SOON!
+- PCBs: https://bit.ly/3A1mmZc
 - 1x ESP Wroom 32 Development Kit (30 pin version): https://amzn.to/3zT9VOL
 - 1x PAM8403 Audio Amplifier: https://amzn.to/3AmsVa8
 - 2x Thumbwheel Potentiometers: https://amzn.to/3dtOYCq
@@ -54,7 +54,7 @@ I used the following tools during the build. If you need any of these, they can 
 
 ## PCB Design Files
 
-The PCBs for this project were designed with Altium Designer.  You can get a free trial of Altium Designer [here](https://www.altium.com/yt/supermakesomething) and also get 25% off through this link if you decide to buy a license.  I'm still working out how best to share the design files, but in the meantime feel free to grab the PCB Gerber files from PCBWay here: LINK COMING SOON!
+The PCBs for this project were designed with Altium Designer.  You can get a free trial of Altium Designer [here](https://www.altium.com/yt/supermakesomething) and also get 25% off through this link if you decide to buy a license.  I'm still working out how best to share the design files, but in the meantime feel free to grab the PCB Gerber files from PCBWay here: https://bit.ly/3A1mmZc
 
 ## Other Notes
 

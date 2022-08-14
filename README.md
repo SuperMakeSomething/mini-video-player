@@ -9,12 +9,12 @@ license: Creative Commons - Attribution - Non-Commercial.  More information avai
 
 Arduino code and programming instructions for the Mini Video Player featured in Super Make Something Episode 24!
 
-The project video can be found here: LINK COMING SOON!
+The project video can be found here: https://youtu.be/67RFm2RMjC4
 
 If you like projects like these, consider subscribing to the Super Make Something YouTube page [here](https://www.youtube.com/supermakesomething?sub_confirmation=1) for more cool builds!  To support more projects you can [buy me a coffee on KoFi](https://ko-fi.com/supermakesomething).
 
 ## Introduction
-This repository contains code and additional instructions to build your own Mini Video Player.  Information found in this repository accompanies the "Open Source Mini Video Player" build video on the Super Make Something YouTube page, which can be found here: LINK COMING SOON!
+This repository contains code and additional instructions to build your own Mini Video Player.  Information found in this repository accompanies the "Open Source Mini Video Player" build video on the Super Make Something YouTube page, which can be found here: https://youtu.be/67RFm2RMjC4
 
 Please watch the accompanying project video and read through this README file in its entirety before beginning assembly of your PCB. For the 'Over 9000' configuration, the potentiometer of the battery charger and boost module must be adjusted so that it has a 5V output voltage in order to not damage the ESP32.
 

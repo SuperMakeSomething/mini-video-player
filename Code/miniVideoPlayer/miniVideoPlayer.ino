@@ -294,7 +294,7 @@ void playVideo(String videoFilename, String audioFilename)
     }
     if (mjpeg_buf)
     {
-        free(mjpeg_buffer);
+        free(mjpeg_buf);
     }
 }
 

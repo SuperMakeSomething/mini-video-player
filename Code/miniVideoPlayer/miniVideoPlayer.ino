@@ -292,6 +292,10 @@ void playVideo(String videoFilename, String audioFilename)
         vFile.close();
         aFile -> close();
     }
+    if (mjpeg_buf)
+    {
+        free(mjpeg_buffer);
+    }
 }
 
 // pixel drawing callback

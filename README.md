@@ -54,6 +54,8 @@ I used the following tools during the build. If you need any of these, they can 
 
 (All Amazon links are affiliate links.)
 
+*Note:* The PCB currently has a silkscreen error and lists a 10K resistor instead of a 2.2K resistor. This is merely a cosmetic issue and does not affect functionality. When using a 1K volume potentiometer, a 2.2K resistor should be used.
+
 ## PCB Design Files
 
 The PCBs for this project were designed with Altium Designer.  You can get a free trial of Altium Designer [here](https://www.altium.com/yt/supermakesomething) and also get 25% off through this link if you decide to buy a license.  I'm still working out how best to share the design files, but in the meantime feel free to grab the PCB Gerber files from PCBWay here: https://bit.ly/3A1mmZc

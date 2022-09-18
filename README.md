@@ -11,6 +11,8 @@ Arduino code and programming instructions for the Mini Video Player featured in 
 
 The project video can be found here: https://youtu.be/67RFm2RMjC4
 
+We also built one LIVE on Youtube! Check out the replay of the livestream here: https://youtu.be/Ob_l5PkH2qA
+
 If you like projects like these, consider subscribing to the Super Make Something YouTube page [here](https://www.youtube.com/supermakesomething?sub_confirmation=1) for more cool builds!  To support more projects you can [buy me a coffee on KoFi](https://ko-fi.com/supermakesomething).
 
 ## Introduction

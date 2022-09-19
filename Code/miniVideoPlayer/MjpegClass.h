@@ -182,6 +182,26 @@ public:
     return false;
   }
 
+// Cleanup test
+
+  bool cleanup()
+  {
+    if (_read_buf)
+    {
+      free(_read_buf);
+      _read_buf = NULL;
+    }
+
+    if (_mjpeg_buf)
+    {
+      free(_mjpeg_buf);
+      _mjpeg_buf = NULL;
+    }
+    
+   }
+
+// Cleanup test
+
   int getWidth()
   {
     return _jpeg.getWidth();

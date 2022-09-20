@@ -216,9 +216,20 @@ void playVideo(String videoFilename, String audioFilename)
     int brightPWM = 0;
     
     Serial.println("In playVideo() loop!");
+    /*
     out = new AudioOutputI2S(0,1,128);
     mp3 = new AudioGeneratorMP3();
     aFile = new AudioFileSourceFS(SD, audioFilename.c_str()); //Typecast audioFilename String for AudioFileSourceFS input
+    */
+
+    if (!out)
+      out = new AudioOutputI2S(0,1,128);
+    if (!mp3)
+      mp3 = new AudioGeneratorMP3();
+    if (aFile)
+      delete aFile;
+    aFile = new AudioFileSourceFS(SD, audioFilename.c_str()); //Typecast audioFilename String for AudioFileSourceFS input
+    
     Serial.println("Created aFile!");
     File vFile = SD.open(videoFilename);
     Serial.println("Created vFile!");
@@ -235,7 +246,7 @@ void playVideo(String videoFilename, String audioFilename)
       mjpeg.setup(&vFile, mjpeg_buf, drawMCU, false, true); //MJPEG SETUP -> bool setup(Stream *input, uint8_t *mjpeg_buf, JPEG_DRAW_CALLBACK *pfnDraw, bool enableMultiTask, bool useBigEndian)
     }
     
-    if (!vFile || vFile.isDirectory())
+    if (!vFile || vFile.isDirectory()) 
     {
       Serial.println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
       gfx->println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
@@ -248,8 +259,17 @@ void playVideo(String videoFilename, String audioFilename)
       curr_ms = start_ms;
       next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
 
-        while (vFile.available() && buttonPressed == false)
+      int threshold = vFile.available()*0.01; // Skip to next file 1% from the end
+      
+        //while (vFile.available() && buttonPressed == false)
+        while (vFile.available()>threshold && buttonPressed == false)
         {
+          Serial.print("Threshold: ");
+          Serial.print(threshold);
+          Serial.print(" | vFile has: ");
+          Serial.print(vFile.available());
+          Serial.println(" bytes left.");
+          
           // Read video
           mjpeg.readMjpegBuf();
           total_read_video += millis() - curr_ms;

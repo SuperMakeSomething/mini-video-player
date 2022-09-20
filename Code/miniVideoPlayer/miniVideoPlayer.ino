@@ -291,18 +291,10 @@ void playVideo(String videoFilename, String audioFilename)
         Serial.println(F("MP3 audio MJPEG video end"));
         vFile.close();
         aFile -> close();
-        if (mjpeg_buf)
-        {
-          mjpeg.cleanup();
-          free(mjpeg_buf);
-          mjpeg_buf = NULL;
-        }
     }
     if (mjpeg_buf)
     {
-        mjpeg.cleanup();
         free(mjpeg_buf);
-        mjpeg_buf = NULL;
     }
 }
 

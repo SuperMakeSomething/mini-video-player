@@ -26,7 +26,7 @@ int LCD_CS = 5;
 
 int BTN_NEXT = 21;
 int BTN_PREV = 15;
- 
+
 /* Arduino_GFX */
 #include <Arduino_GFX_Library.h>
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(LCD_DC_A0 /* DC */, LCD_CS /* CS */, LCD_SCK /* SCK */, LCD_MOSI /* MOSI */, LCD_MISO /* MISO */);
@@ -105,12 +105,12 @@ void setup()
 
   attachInterrupt(BTN_NEXT, incrFileNo, RISING);
   attachInterrupt(BTN_PREV, decrFileNo, RISING);
- 
+
   // Init audio
   out = new AudioOutputI2S(0,1,128);
   mp3 = new AudioGeneratorMP3();
   aFile = new AudioFileSourceFS(SD);
- 
+
   // Init Video
   gfx->begin();
   gfx->fillScreen(BLACK);
@@ -134,7 +134,7 @@ void setup()
 }
 
 int getNoFiles(File dir)
-{  
+{
   while (true)
   {
     File entry =  dir.openNextFile();
@@ -143,12 +143,12 @@ int getNoFiles(File dir)
       // no more files
       break;
     }
-    
-    if (entry.isDirectory()) 
+
+    if (entry.isDirectory())
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
-    } 
+    }
     else
     {
       Serial.println(entry.name());
@@ -160,8 +160,8 @@ int getNoFiles(File dir)
 }
 
 void getFilenames(File dir, int fileNo)
-{ 
-  int fileCounter = 1; 
+{
+  int fileCounter = 1;
   while (true)
   {
     File entry =  dir.openNextFile();
@@ -170,14 +170,14 @@ void getFilenames(File dir, int fileNo)
       // no more files
       break;
     }
-        
+
     Serial.println(entry.name());
-    
-    if (entry.isDirectory()) 
+
+    if (entry.isDirectory())
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
-    } 
+    }
     else // Get filename
     {
       while (fileCounter<fileNo) // While not at correct file pair number
@@ -205,14 +205,14 @@ void getFilenames(File dir, int fileNo)
 void playVideo(String videoFilename, String audioFilename)
 {
   int next_frame = 0;
-  int skipped_frames = 0;  
+  int skipped_frames = 0;
   unsigned long total_play_audio = 0;
   unsigned long total_read_video = 0;
   unsigned long total_decode_video = 0;
   unsigned long start_ms, curr_ms, next_frame_ms;
 
   int brightPWM = 0;
-    
+
   Serial.println("In playVideo() loop!");
 
   if (mp3 && mp3->isRunning())
@@ -220,7 +220,7 @@ void playVideo(String videoFilename, String audioFilename)
   if (!aFile->open(audioFilename.c_str()))
     Serial.println(F("Failed to open audio file"));   
   Serial.println("Created aFile!");
- 
+
   File vFile = SD.open(videoFilename);
   Serial.println("Created vFile!");
 
@@ -234,8 +234,8 @@ void playVideo(String videoFilename, String audioFilename)
     // init Video
     mjpeg.setup(&vFile, mjpeg_buf, drawMCU, false, true); //MJPEG SETUP -> bool setup(Stream *input, uint8_t *mjpeg_buf, JPEG_DRAW_CALLBACK *pfnDraw, bool enableMultiTask, bool useBigEndian)
   }
-    
-  if (!vFile || vFile.isDirectory()) 
+
+  if (!vFile || vFile.isDirectory())
   {
     Serial.println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
     gfx->println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
@@ -243,12 +243,12 @@ void playVideo(String videoFilename, String audioFilename)
   else
   {
     // init audio
-    if (!mp3->begin(aFile, out)
+    if (!mp3->begin(aFile, out))
       Serial.println(F("Failed to start audio!"));
     start_ms = millis();
     curr_ms = start_ms;
     next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
-  
+
     while (vFile.available() && buttonPressed == false)
     {
       // Read video

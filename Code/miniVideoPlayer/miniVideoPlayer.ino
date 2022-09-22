@@ -188,12 +188,23 @@ void getFilenames(File dir, int fileNo)
         fileCounter = fileCounter+1;
         entry = dir.openNextFile(); // Open next file for reading
       }
+  
+  // arduino-esp32 < 2.0.0 were based on IDF 3.3.5 (and earlier).
+  //               >= 2.0.0 on IDF 4.4 (and later) -> this version includes File::path()
+  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
       videoFilename = entry.path();
+  #else
+      videoFilename = entry.name();
+  #endif
       Serial.print("Loading video: ");
       Serial.println(videoFilename);
       entry.close();
       entry =  dir.openNextFile();
+  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
       audioFilename = entry.path();
+  #else
+      audioFilename = entry.name();
+  #endif
       Serial.print("Loading audio: ");
       Serial.println(audioFilename);
       entry.close();

@@ -76,6 +76,9 @@ public:
     _pfnDraw = pfnDraw;
     _enableMultiTask = enableMultiTask;
     _useBigEndian = useBigEndian;
+    _mjpeg_buf_offset = 0;
+    _inputindex = 0;
+    _remain = 0;
 
     if (!_read_buf)
     {

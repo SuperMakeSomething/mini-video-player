@@ -26,22 +26,21 @@ int LCD_CS = 5;
 
 int BTN_NEXT = 21;
 int BTN_PREV = 15;
- 
+
 /* Arduino_GFX */
-/* NOTE - IF RED AND BLUE COLORS ARE SWAPPED, MODIFY "Arduino_ST7735.h" in "\Arduino\libraries\GFX_Library_for_Arduino\src\display" BY FLIPPING bool bgr. */
 #include <Arduino_GFX_Library.h>
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(LCD_DC_A0 /* DC */, LCD_CS /* CS */, LCD_SCK /* SCK */, LCD_MOSI /* MOSI */, LCD_MISO /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7735(bus, LCD_RESET /* RST */, 3 /* rotation */, false /* IPS */);
+/* NOTE - IF RED AND BLUE COLORS ARE SWAPPED, FLIP bool bgr in below constructor. */
+Arduino_GFX *gfx = new Arduino_ST7735(bus, LCD_RESET /* RST */, 3 /* rotation */, false /* IPS */, ST7735_TFTWIDTH /* w*/, ST7735_TFTHEIGHT /* h*/,
+                                      0 /* col_offset1 */, 0 /* row_offset1 */, 0 /* col_offset2 */, 0 /* row_offset2 */, true /* bgr */);
 
 /* MP3 Audio */
 #include <AudioFileSourceFS.h>
-#include <AudioFileSourceID3.h>
-#include <AudioFileSourceSD.h> 
 #include <AudioGeneratorMP3.h>
 #include <AudioOutputI2S.h>
-static AudioGeneratorMP3 *mp3;
-static AudioFileSourceFS *aFile;
-static AudioOutputI2S *out;
+static AudioGeneratorMP3 *mp3 = NULL;
+static AudioFileSourceFS *aFile = NULL;
+static AudioOutputI2S *out = NULL;
 
 /* MJPEG Video */
 #include "MjpegClass.h"
@@ -107,6 +106,11 @@ void setup()
   attachInterrupt(BTN_NEXT, incrFileNo, RISING);
   attachInterrupt(BTN_PREV, decrFileNo, RISING);
 
+  // Init audio
+  out = new AudioOutputI2S(0,1,128);
+  mp3 = new AudioGeneratorMP3();
+  aFile = new AudioFileSourceFS(SD);
+
   // Init Video
   gfx->begin();
   gfx->fillScreen(BLACK);
@@ -120,7 +124,7 @@ void setup()
   else
   {
     root = SD.open("/");
-    noFiles = getNoFiles(root,0);
+    noFiles = getNoFiles(root);
     Serial.print("Found ");
     Serial.print(noFiles);
     Serial.println(" in root directory!");
@@ -129,8 +133,8 @@ void setup()
 
 }
 
-int getNoFiles(File dir, int numTabs)
-{  
+int getNoFiles(File dir)
+{
   while (true)
   {
     File entry =  dir.openNextFile();
@@ -139,30 +143,25 @@ int getNoFiles(File dir, int numTabs)
       // no more files
       break;
     }
-    
-    for (uint8_t i = 0; i < numTabs; i++)
-    {
-      Serial.print('\t');
-    }
-    
-    if (entry.isDirectory()) 
+
+    if (entry.isDirectory())
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
-    } 
+    }
     else
     {
       Serial.println(entry.name());
       entry.close();
-      noFiles = noFiles+1;
+      ++noFiles;
     }
   }
   return noFiles;
 }
 
 void getFilenames(File dir, int fileNo)
-{ 
-  int fileCounter = 1; 
+{
+  int fileCounter = 1;
   while (true)
   {
     File entry =  dir.openNextFile();
@@ -171,31 +170,41 @@ void getFilenames(File dir, int fileNo)
       // no more files
       break;
     }
-        
+
     Serial.println(entry.name());
-    
-    if (entry.isDirectory()) 
+
+    if (entry.isDirectory())
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
-    } 
+    }
     else // Get filename
     {
       while (fileCounter<fileNo) // While not at correct file pair number
       {
         entry.close(); //Close current video file
         entry =  dir.openNextFile(); //Open and close corresponding audio file
-        audioFilename = entry.name();
         entry.close();
         fileCounter = fileCounter+1;
         entry = dir.openNextFile(); // Open next file for reading
       }
+  
+  // arduino-esp32 < 2.0.0 were based on IDF 3.3.5 (and earlier).
+  //               >= 2.0.0 on IDF 4.4 (and later) -> this version includes File::path()
+  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
+      videoFilename = entry.path();
+  #else
       videoFilename = entry.name();
+  #endif
       Serial.print("Loading video: ");
       Serial.println(videoFilename);
       entry.close();
       entry =  dir.openNextFile();
+  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
+      audioFilename = entry.path();
+  #else
       audioFilename = entry.name();
+  #endif
       Serial.print("Loading audio: ");
       Serial.println(audioFilename);
       entry.close();
@@ -206,116 +215,98 @@ void getFilenames(File dir, int fileNo)
 
 void playVideo(String videoFilename, String audioFilename)
 {
-    int next_frame = 0;
-    int skipped_frames = 0;  
-    unsigned long total_play_audio = 0;
-    unsigned long total_read_video = 0;
-    unsigned long total_decode_video = 0;
-    unsigned long start_ms, curr_ms, next_frame_ms;
+  int next_frame = 0;
+  int skipped_frames = 0;
+  unsigned long total_play_audio = 0;
+  unsigned long total_read_video = 0;
+  unsigned long total_decode_video = 0;
+  unsigned long start_ms, curr_ms, next_frame_ms;
 
-    int brightPWM = 0;
-    
-    Serial.println("In playVideo() loop!");
-    /*
-    out = new AudioOutputI2S(0,1,128);
-    mp3 = new AudioGeneratorMP3();
-    aFile = new AudioFileSourceFS(SD, audioFilename.c_str()); //Typecast audioFilename String for AudioFileSourceFS input
-    */
+  int brightPWM = 0;
 
-    if (!out)
-      out = new AudioOutputI2S(0,1,128);
-    if (!mp3)
-      mp3 = new AudioGeneratorMP3();
-    if (aFile)
-      delete aFile;
-    aFile = new AudioFileSourceFS(SD, audioFilename.c_str()); //Typecast audioFilename String for AudioFileSourceFS input
-    
-    Serial.println("Created aFile!");
-    File vFile = SD.open(videoFilename);
-    Serial.println("Created vFile!");
+  Serial.println("In playVideo() loop!");
 
-    uint8_t *mjpeg_buf = (uint8_t *)malloc(MJPEG_BUFFER_SIZE);
-    if (!mjpeg_buf)
+  if (mp3 && mp3->isRunning())
+    mp3->stop();
+  if (!aFile->open(audioFilename.c_str()))
+    Serial.println(F("Failed to open audio file"));   
+  Serial.println("Created aFile!");
+
+  File vFile = SD.open(videoFilename);
+  Serial.println("Created vFile!");
+
+  uint8_t *mjpeg_buf = (uint8_t *)malloc(MJPEG_BUFFER_SIZE);
+  if (!mjpeg_buf)
+  {
+    Serial.println(F("mjpeg_buf malloc failed!"));
+  }
+  else
+  {
+    // init Video
+    mjpeg.setup(&vFile, mjpeg_buf, drawMCU, false, true); //MJPEG SETUP -> bool setup(Stream *input, uint8_t *mjpeg_buf, JPEG_DRAW_CALLBACK *pfnDraw, bool enableMultiTask, bool useBigEndian)
+  }
+
+  if (!vFile || vFile.isDirectory())
+  {
+    Serial.println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
+    gfx->println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
+  }
+  else
+  {
+    // init audio
+    if (!mp3->begin(aFile, out))
+      Serial.println(F("Failed to start audio!"));
+    start_ms = millis();
+    curr_ms = start_ms;
+    next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
+
+    while (vFile.available() && buttonPressed == false)
     {
-      Serial.println(F("mjpeg_buf malloc failed!"));
-      
-    }
-    else
-    {
-      // init Video
-      mjpeg.setup(&vFile, mjpeg_buf, drawMCU, false, true); //MJPEG SETUP -> bool setup(Stream *input, uint8_t *mjpeg_buf, JPEG_DRAW_CALLBACK *pfnDraw, bool enableMultiTask, bool useBigEndian)
-    }
-    
-    if (!vFile || vFile.isDirectory()) 
-    {
-      Serial.println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
-      gfx->println(("ERROR: Failed to open "+ videoFilename +".mjpeg file for reading"));
-    }
-    else
-    {
-      // init audio
-      mp3->begin(aFile, out);
-      start_ms = millis();
-      curr_ms = start_ms;
+      // Read video
+      mjpeg.readMjpegBuf();
+      total_read_video += millis() - curr_ms;
+      curr_ms = millis();
+      if (millis() < next_frame_ms) // check show frame or skip frame
+      {
+        // Play video
+        mjpeg.drawJpg();
+        total_decode_video += millis() - curr_ms;
+      }
+      else
+      {
+        ++skipped_frames;
+        Serial.println(F("Skip frame"));
+      }
+      curr_ms = millis();
+      // Play audio
+      if (mp3->isRunning() && !mp3->loop())
+      {
+        mp3->stop();
+      }
+
+      total_play_audio += millis() - curr_ms;
+      while (millis() < next_frame_ms)
+      {
+        vTaskDelay(1);
+      }
+      curr_ms = millis();
       next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
-
-      int threshold = vFile.available()*0.01; // Skip to next file 1% from the end
-      
-        //while (vFile.available() && buttonPressed == false)
-        while (vFile.available()>threshold && buttonPressed == false)
-        {
-          Serial.print("Threshold: ");
-          Serial.print(threshold);
-          Serial.print(" | vFile has: ");
-          Serial.print(vFile.available());
-          Serial.println(" bytes left.");
-          
-          // Read video
-          mjpeg.readMjpegBuf();
-          total_read_video += millis() - curr_ms;
-          curr_ms = millis();
-
-          if (millis() < next_frame_ms) // check show frame or skip frame
-          {
-            // Play video
-            mjpeg.drawJpg();
-            total_decode_video += millis() - curr_ms;
-          }
-          else
-          {
-            ++skipped_frames;
-            Serial.println(F("Skip frame"));
-          }
-          curr_ms = millis();
-          // Play audio
-          if ((mp3->isRunning()) && (!mp3->loop()))
-          {
-            mp3->stop();
-          }
-  
-          total_play_audio += millis() - curr_ms;
-          while (millis() < next_frame_ms)
-          {
-            vTaskDelay(1);
-          }
-          curr_ms = millis();
-          next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
-        }
-        if (fullPlaythrough == false)
-        {
-          mp3->stop();
-        }
-        buttonPressed = false; // reset buttonPressed boolean
-        int time_used = millis() - start_ms;
-        int total_frames = next_frame - 1;
-        Serial.println(F("MP3 audio MJPEG video end"));
-        vFile.close();
-        aFile -> close();
     }
-    if (mjpeg_buf)
+    if (fullPlaythrough == false)
     {
-        free(mjpeg_buf);
+      mp3->stop();
     }
+    buttonPressed = false; // reset buttonPressed boolean
+    int time_used = millis() - start_ms;
+    int total_frames = next_frame - 1;
+    Serial.println(F("MP3 audio MJPEG video end"));
+    vFile.close();
+    aFile -> close();
+  }
+  if (mjpeg_buf)
+  {
+    free(mjpeg_buf);
+  }
 }
 
 // pixel drawing callback

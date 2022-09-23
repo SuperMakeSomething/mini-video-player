@@ -60,7 +60,7 @@ I used the following tools during the build. If you need any of these, they can 
 
 (All Amazon links are affiliate links.)
 
-*Note:* The PCB currently has a silkscreen error and lists a 10K resistor instead of a 2.2K resistor. This is merely a cosmetic issue and does not affect functionality. When using a 1K volume potentiometer, a 2.2K resistor should be used.
+*Note:* PCBs ordered before 9/23/2022 have a silkscreen error that lists a 10K resistor instead of a 2.2K resistor in the volume control circuit. This is merely a cosmetic issue and does not affect functionality. When using a 1K thumbwheel potentiometer to control the volume, a 2.2K resistor should be used to approximate the desired pseudo-logarithmic curve for volume control.
 
 ## PCB Design Files
 

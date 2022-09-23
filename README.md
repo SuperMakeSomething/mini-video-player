@@ -21,12 +21,18 @@ This repository contains code and additional instructions to build your own Mini
 Please watch the accompanying project video and read through this README file in its entirety before beginning assembly of your PCB. For the 'Over 9000' configuration, the potentiometer of the battery charger and boost module must be adjusted so that it has a 5V output voltage in order to not damage the ESP32.
 
 ## Installation instructions and required libraries
-The `Code` folder contains all of the files needed to compile the project.  The folder `miniVideoVideoPlayer` contains the miniVideoPlayer.ino file, which should be opened in the Arduino IDE.  Folders in the `libraries` directory should be copied to the location of where your other Arduino libraries are installed.  For Windows users, this is typically under `Documents\Arduino\libraries`.
+The `Code` folder contains all of the files needed to compile the project.  The folder `miniVideoVideoPlayer` contains the miniVideoPlayer.ino file, which should be opened in the Arduino IDE.
 
-*Note:* Instructions on how to install the ESP32 library so that it can be programmed using the Arduino IDE can be found [here](https://youtube.com/shorts/HyL55EKHbtg).  At the time of this writing, the code for this project only works with the `esp32` library up to version 1.0.6.
+To make the project as beginner friendly as possible, a set of support libraries is distributed with the base code that will allow you to compile and program the ESP32.  Folders in the `libraries` directory should be copied to the location of where your other Arduino libraries are installed.  For Windows users, this is typically under `Documents\Arduino\libraries`.
+
+A better way to install these libraries is to use Library Manager that is built into the Arduino IDE.  This manager can be accessed under `Tools --> Library Manager`, after which the appropriate libraries can be found by searching for them by name.  Using these ensures that you are always using the most up-to-date code that may include improvements implemented by their respective developers.
+
+*Notes:* 
+- Instructions on how to install the ESP32 library so that it can be programmed using the Arduino IDE can be found [here](https://youtube.com/shorts/HyL55EKHbtg).  ~~At the time of this writing, the code for this project only works with the `esp32` library up to version 1.0.6.~~
+- A _huge_ thank you to GitHub user [bepaald](https://github.com/bepaald) for implementing various bug fixes, compatibility issues, and taking the time to clean up the code.  Their edits have improved the code significantly since it was first released and make the project much more robust and easier to use.
 
 ## Bill of materials
-The following quantities and components are needed to build this project.  You can also buy a kit version that includes everything you need here: LINK COMING SOON!
+The following quantities and components are needed to build this project.  You can also buy a kit version that includes everything you need here: https://www.alien3d.us/product/diy-mini-video-player-kit-by-super-make-something/
 
 - PCBs: https://bit.ly/3A1mmZc
 - 1x ESP Wroom 32 Development Kit (30 pin version): https://amzn.to/3zT9VOL

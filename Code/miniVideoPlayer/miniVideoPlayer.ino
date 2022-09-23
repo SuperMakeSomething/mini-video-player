@@ -1,3 +1,11 @@
+/* Open Source Mini Video Player Code (Open Source Mini Video Player - Super Make Something Episode 24)
+ * by: Alex - Super Make Something
+ * date: September 23rd, 2022
+ * license: Creative Commons - Attribution - Non-Commercial.  More information available at: http://creativecommons.org/licenses/by-nc/3.0/
+ * links: Project Episode Link: https://youtu.be/67RFm2RMjC4  Livestream Build Episode Link: https://youtu.be/Ob_l5PkH2qA
+ * note: Special thank you to GitHub user bepaald for his extensive contributions to bug fixes and code clean-up. Please see the README for more details.
+ */
+
 /*
  * require libraries:
  * https://github.com/moononournation/Arduino_GFX.git
@@ -32,7 +40,7 @@ int BTN_PREV = 15;
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(LCD_DC_A0 /* DC */, LCD_CS /* CS */, LCD_SCK /* SCK */, LCD_MOSI /* MOSI */, LCD_MISO /* MISO */);
 /* NOTE - IF RED AND BLUE COLORS ARE SWAPPED, FLIP bool bgr in below constructor. */
 Arduino_GFX *gfx = new Arduino_ST7735(bus, LCD_RESET /* RST */, 3 /* rotation */, false /* IPS */, ST7735_TFTWIDTH /* w*/, ST7735_TFTHEIGHT /* h*/,
-                                      0 /* col_offset1 */, 0 /* row_offset1 */, 0 /* col_offset2 */, 0 /* row_offset2 */, true /* bgr */);
+                                      0 /* col_offset1 */, 0 /* row_offset1 */, 0 /* col_offset2 */, 0 /* row_offset2 */, false /* bgr */);
 
 /* MP3 Audio */
 #include <AudioFileSourceFS.h>

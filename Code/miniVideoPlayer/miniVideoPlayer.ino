@@ -72,8 +72,8 @@ void IRAM_ATTR incrFileNo()
 {
   if ((millis() - lastDebounceTime) > debounceDelay)
   {
-    fileNo = fileNo+1;
-    if (fileNo>noFiles/2) // Loop around
+    fileNo += 1;
+    if (fileNo > noFiles) // Loop around
     {
       fileNo = 1;
     }
@@ -89,10 +89,10 @@ void IRAM_ATTR decrFileNo()
 {
   if ((millis() - lastDebounceTime) > debounceDelay)
   {
-    fileNo = fileNo-1;
-    if (fileNo<1) // Loop around
+    fileNo -= 1;
+    if (fileNo < 1) // Loop around
     {
-      fileNo = noFiles/2;
+      fileNo = noFiles;
     }
     buttonPressed = true;
     lastDebounceTime = millis();
@@ -141,25 +141,40 @@ void setup()
 
 }
 
+bool isAudioVideoPair(File const &entry, File dir)
+{
+  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
+  String name = entry.path();
+  #else
+  String name = entry.name();
+  #endif
+  
+  if (!name.endsWith(".mjpeg"))
+    return false;
+  
+  if (SD.exists(name.substring(0, name.length() - 6) + ".mp3"))
+    return true;
+
+  return false;
+}
+
 int getNoFiles(File dir)
 {
   while (true)
   {
-    File entry =  dir.openNextFile();
-    if (! entry)
+    File entry = dir.openNextFile();
+    if (!entry)
     {
       // no more files
       break;
     }
-
-    if (entry.isDirectory())
+    if (entry.isDirectory() || !isAudioVideoPair(entry, dir))
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
     }
     else
     {
-      Serial.println(entry.name());
       entry.close();
       ++noFiles;
     }
@@ -169,7 +184,7 @@ int getNoFiles(File dir)
 
 void getFilenames(File dir, int fileNo)
 {
-  int fileCounter = 1;
+  int fileCounter = 0;
   while (true)
   {
     File entry =  dir.openNextFile();
@@ -178,45 +193,28 @@ void getFilenames(File dir, int fileNo)
       // no more files
       break;
     }
-
-    Serial.println(entry.name());
-
-    if (entry.isDirectory())
+    if (entry.isDirectory() || !isAudioVideoPair(entry, dir))
     {
       // Skip file if in subfolder
        entry.close(); // Close folder entry
     }
-    else // Get filename
+    else // Valid audio/video-pair
     {
-      while (fileCounter<fileNo) // While not at correct file pair number
+      ++fileCounter;
+      if (fileCounter == fileNo)
       {
-        entry.close(); //Close current video file
-        entry =  dir.openNextFile(); //Open and close corresponding audio file
-        entry.close();
-        fileCounter = fileCounter+1;
-        entry = dir.openNextFile(); // Open next file for reading
+        #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
+        videoFilename = entry.path();
+        #else
+        videoFilename = entry.name();
+        #endif
+        audioFilename = videoFilename.substring(0, videoFilename.length() - 6) + ".mp3";
+        Serial.print("Loading video: ");
+        Serial.println(videoFilename);
+        Serial.print("Loading audio: ");
+        Serial.println(audioFilename);
       }
-  
-  // arduino-esp32 < 2.0.0 were based on IDF 3.3.5 (and earlier).
-  //               >= 2.0.0 on IDF 4.4 (and later) -> this version includes File::path()
-  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
-      videoFilename = entry.path();
-  #else
-      videoFilename = entry.name();
-  #endif
-      Serial.print("Loading video: ");
-      Serial.println(videoFilename);
       entry.close();
-      entry =  dir.openNextFile();
-  #if ESP_IDF_VERSION_MAJOR > 4 || (ESP_IDF_VERSION_MAJOR == 4 && ESP_IDF_VERSION_MINOR >= 4)
-      audioFilename = entry.path();
-  #else
-      audioFilename = entry.name();
-  #endif
-      Serial.print("Loading audio: ");
-      Serial.println(audioFilename);
-      entry.close();
-      break;
     }
   }
 }
@@ -337,7 +335,7 @@ void loop()
   if (fullPlaythrough == true) // Check fullPlaythrough boolean to avoid double increment of fileNo
   {
     fileNo = fileNo+1; // Increment fileNo to play next video
-    if (fileNo>noFiles/2) // If exceeded number of files, reset counter
+    if (fileNo > noFiles) // If exceeded number of files, reset counter
     {
       fileNo = 1;
     }
